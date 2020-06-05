@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+// The Square service definition.
+service Square {
+  rpc Square(SquareRequest) returns (SquareResponse);
+}
+
+message SquareRequest {
+  int64 s = 1;
+}
+
+message SquareResponse {
+  int64 res = 1;
+  string err = 2;
+}
