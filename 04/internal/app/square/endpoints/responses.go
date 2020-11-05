@@ -2,11 +2,11 @@ package endpoints
 
 import (
 	"net/http"
-
+	
 	httptransport "github.com/go-kit/kit/transport/http"
-
-	"github.com/cage1016/gokit-workshop/internal/app/square/service"
-	"github.com/cage1016/gokit-workshop/internal/pkg/responses"
+	
+	"github.com/cage1016/square/internal/pkg/responses"
+	"github.com/cage1016/square/internal/app/square/service"
 )
 
 var (
@@ -18,7 +18,7 @@ var (
 // SquareResponse collects the response values for the Square method.
 type SquareResponse struct {
 	Res int64 `json:"res"`
-	Err error `json:"-"`
+	Err error `json:"err"`
 }
 
 func (r SquareResponse) StatusCode() int {
@@ -32,3 +32,4 @@ func (r SquareResponse) Headers() http.Header {
 func (r SquareResponse) Response() interface{} {
 	return responses.DataRes{APIVersion: service.Version, Data: r}
 }
+

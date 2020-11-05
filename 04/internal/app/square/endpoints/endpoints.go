@@ -3,7 +3,7 @@ package endpoints
 import (
 	"context"
 
-	"github.com/cage1016/gokit-workshop/internal/app/square/service"
+	"github.com/cage1016/square/internal/app/square/service"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/tracing/opentracing"

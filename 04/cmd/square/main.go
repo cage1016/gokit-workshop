@@ -21,10 +21,11 @@ import (
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 
-	"github.com/cage1016/gokit-workshop/internal/app/square/endpoints"
-	"github.com/cage1016/gokit-workshop/internal/app/square/service"
-	"github.com/cage1016/gokit-workshop/internal/app/square/transports"
-	pb "github.com/cage1016/gokit-workshop/pb/square"
+	"github.com/cage1016/square/internal/app/square/endpoints"
+	"github.com/cage1016/square/internal/app/square/service"
+	transportsgrpc "github.com/cage1016/square/internal/app/square/transports/grpc"
+	transportshttp "github.com/cage1016/square/internal/app/square/transports/http"
+	pb "github.com/cage1016/square/pb/square"
 )
 
 const (
@@ -35,11 +36,11 @@ const (
 	defHTTPPort    string = "8180"
 	defGRPCPort    string = "8181"
 	envZipkinV2URL string = "QS_ZIPKIN_V2_URL"
-	envServiceName string = "QS_SQUARE_SERVICE_NAME"
-	envLogLevel    string = "QS_SQUARE_LOG_LEVEL"
-	envServiceHost string = "QS_SQUARE_SERVICE_HOST"
-	envHTTPPort    string = "QS_SQUARE_HTTP_PORT"
-	envGRPCPort    string = "QS_SQUARE_GRPC_PORT"
+	envServiceName string = "QS_SERVICE_NAME"
+	envLogLevel    string = "QS_LOG_LEVEL"
+	envServiceHost string = "QS_SERVICE_HOST"
+	envHTTPPort    string = "QS_HTTP_PORT"
+	envGRPCPort    string = "QS_GRPC_PORT"
 )
 
 type config struct {
@@ -148,7 +149,7 @@ func startHTTPServer(ctx context.Context, wg *sync.WaitGroup, endpoints endpoint
 
 	p := fmt.Sprintf(":%s", port)
 	// create a server
-	srv := &http.Server{Addr: p, Handler: transports.NewHTTPHandler(endpoints, tracer, zipkinTracer, logger)}
+	srv := &http.Server{Addr: p, Handler: transportshttp.NewHTTPHandler(endpoints, tracer, zipkinTracer, logger)}
 	level.Info(logger).Log("protocol", "HTTP", "exposed", port)
 	go func() {
 		// service connections
@@ -183,7 +184,7 @@ func startGRPCServer(ctx context.Context, wg *sync.WaitGroup, endpoints endpoint
 	var server *grpc.Server
 	level.Info(logger).Log("protocol", "GRPC", "exposed", port)
 	server = grpc.NewServer(grpc.UnaryInterceptor(kitgrpc.Interceptor))
-	pb.RegisterSquareServer(server, transports.MakeGRPCServer(endpoints, tracer, zipkinTracer, logger))
+	pb.RegisterSquareServer(server, transportsgrpc.MakeGRPCServer(endpoints, tracer, zipkinTracer, logger))
 	healthgrpc.RegisterHealthServer(server, hs)
 	reflection.Register(server)
 

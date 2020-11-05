@@ -6,12 +6,15 @@ type DataRes struct {
 }
 
 type Responser interface {
-	Response() interface{}
+	Response() (res interface{})
+}
+
+type BinaryResponser interface {
+	GetBinary() (res []byte)
 }
 
 type Paging struct {
-	CurrentItemCount int64 `json:"currentItemCount"`
-	ItemsPage        int64 `json:"itemsPage"`
-	StartIndex       int64 `json:"startIndex"`
-	TotalItems       int64 `json:"totalItems"`
+	Total  uint64 `json:"total"`
+	Offset uint64 `json:"offset"`
+	Limit  uint64 `json:"limit"`
 }

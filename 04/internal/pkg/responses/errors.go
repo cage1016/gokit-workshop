@@ -1,7 +1,7 @@
 package responses
 
 import (
-	"github.com/cage1016/gokit-workshop/internal/pkg/errors"
+	"github.com/cage1016/square/internal/pkg/errors"
 )
 
 type ErrorWrapper struct {
