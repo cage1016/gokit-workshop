@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.square.name }}
+spec:
+  replicas: {{ .Values.square.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.square.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.square.name }}
+    spec:
+      containers:
+        - name: {{ .Values.square.name }}
+          env:
+          {{- range $key, $value := .Values.square.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+          {{- end }}        
+          image: {{ $.Values.square.image }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.square.name }}
+spec:
+  selector:
+    app: {{ .Values.square.name }}
+  ports:
+    - port: 80
+      name: http
+      targetPort: {{ .Values.square.env.QS_HTTP_PORT }}
+      type: LoadBalancer
+    - port: 8000
+      name: grpc
+      targetPort: {{ .Values.square.env.QS_GRPC_PORT }}
+      type: LoadBalancer

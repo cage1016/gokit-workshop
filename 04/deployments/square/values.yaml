@@ -1,0 +1,8 @@
+square:
+  name: square
+  image: gcr.io/gcp-10-mins/square
+  replicas: 1
+  env:
+    QS_LOG_LEVEL: info
+    QS_HTTP_PORT: 10020
+    QS_GRPC_PORT: 10021

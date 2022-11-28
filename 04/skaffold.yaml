@@ -1,0 +1,24 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+metadata:
+  name: '-'
+build:
+  artifacts:
+  - image: gcr.io/gcp-10-mins/square
+    buildpacks:
+      builder: gcr.io/buildpacks/builder:v1
+      env:
+        - GOOGLE_BUILDABLE=cmd/square/main.go
+        - GOOGLE_RUNTIME_VERSION=1.14
+  tagPolicy:
+    sha256: {}
+  local:
+    push: true        
+deploy:
+  helm:
+    releases:
+    - name: square
+      chartPath: deployments/square
+      valuesFiles:
+      - deployments/square/values.yaml
+      version: 0.1.0
